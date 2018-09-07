@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 BookEntry.COLUMNS_BOOK_AUTHOR,
         };
 
-        // Perform a query on the pets table
+        // Perform a query on the books table
         Cursor cursor = booksDB.query(
                 BookEntry.TABLE_NAME,   // The table to query
                 projection,            // The columns to return
@@ -78,10 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             // Create a header in the Text View that looks like this:
-            //
-            // The pets table contains <number of rows in Cursor> pets.
-            // _id - name - breed - gender - weight
-            //
+            // _id - title - author
             // In the while loop below, iterate through the rows of the cursor and display
             // the information from each column in this order.
             displayView.setText("The pets table contains " + cursor.getCount() + " pets.\n\n");
@@ -109,15 +106,13 @@ public class MainActivity extends AppCompatActivity {
                 ));
             }
         } finally {
-            // Always close the cursor when you're done reading from it. This releases all its
-            // resources and makes it invalid.
             cursor.close();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }

@@ -3,7 +3,6 @@ package example.android.bookkeeper2;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,23 +13,20 @@ import android.widget.Spinner;
 
 public class BooksActivity extends AppCompatActivity {
 
-    /** EditText field to enter the pet's name */
-    private EditText mNameEditText;
+    /** EditText field to enter the author */
+    private EditText mAuthorEditText;
 
-    /** EditText field to enter the pet's breed */
-    private EditText mBreedEditText;
+    /** EditText field to enter the books title */
+    private EditText mTitleEditText;
 
-    /** EditText field to enter the pet's weight */
-    private EditText mWeightEditText;
+    /** EditText field to enter the ibsn */
+    private EditText mIbsnEditText;
 
-    /** EditText field to enter the pet's gender */
-    private Spinner mGenderSpinner;
+    /** EditText field to enter the country */
+    private Spinner mCountrySpinner;
 
-    /**
-     * Gender of the pet. The possible values are:
-     * 0 for unknown gender, 1 for male, 2 for female.
-     */
-    private int mGender = 0;
+    /** EditText field to enter price */
+    private EditText mPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,49 +34,41 @@ public class BooksActivity extends AppCompatActivity {
         setContentView(R.layout.activity_books);
 
         // Find all relevant views that we will need to read user input from
-        mNameEditText = (EditText) findViewById(R.id.edit_pet_name);
-        mBreedEditText = (EditText) findViewById(R.id.edit_pet_breed);
-        mWeightEditText = (EditText) findViewById(R.id.edit_pet_weight);
-        mGenderSpinner = (Spinner) findViewById(R.id.spinner_gender);
+        mAuthorEditText = (EditText) findViewById(R.id.edit_book_title);
+        mTitleEditText = (EditText) findViewById(R.id.edit_author);
+        mIbsnEditText = (EditText) findViewById(R.id.edit_ibsn);
+        mCountrySpinner = (Spinner) findViewById(R.id.spinner_country);
 
         setupSpinner();
     }
 
     /**
-     * Setup the dropdown spinner that allows the user to select the gender of the pet.
+     * Setup the dropdown spinner for the country
      */
     private void setupSpinner() {
         // Create adapter for spinner. The list options are from the String array it will use
         // the spinner will use the default layout
         ArrayAdapter genderSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_gender_options, android.R.layout.simple_spinner_item);
+                R.array.country_array, android.R.layout.simple_spinner_item);
 
         // Specify dropdown layout style - simple list view with 1 item per line
         genderSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 
         // Apply the adapter to the spinner
-        mGenderSpinner.setAdapter(genderSpinnerAdapter);
+        mCountrySpinner.setAdapter(genderSpinnerAdapter);
 
         // Set the integer mSelected to the constant values
-        mGenderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mCountrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selection = (String) parent.getItemAtPosition(position);
-                if (!TextUtils.isEmpty(selection)) {
-                    if (selection.equals(getString(R.string.gender_male))) {
-                        mGender = 1; // Male
-                    } else if (selection.equals(getString(R.string.gender_female))) {
-                        mGender = 2; // Female
-                    } else {
-                        mGender = 0; // Unknown
-                    }
-                }
+
             }
 
             // Because AdapterView is an abstract class, onNothingSelected must be defined
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                mGender = 0; // Unknown
+                // Unknown
             }
         });
     }
