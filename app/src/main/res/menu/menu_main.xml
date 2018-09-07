@@ -5,7 +5,7 @@
     tools:context=".CatalogActivity">
 
     <item
-        android:id="@+id/action_insert_dummy_data"
+        android:id="@+id/save"
         android:title="@string/action_insert_dummy_data"
         app:showAsAction="never" />
 

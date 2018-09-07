@@ -1,13 +1,11 @@
 package example.android.bookkeeper2;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -124,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             // Respond to a click on the "Insert dummy data" menu option
-            case R.id.action_insert_dummy_data:
+            case R.id.save:
                 insertBookData();
                 displayDatabaseInfo();
                 return true;
@@ -149,9 +147,9 @@ public class MainActivity extends AppCompatActivity {
         long newRowID = addToDB.insert(BookEntry.TABLE_NAME,null,values);
 
         if (newRowID > -1) {
-            Toast.makeText(this, "added row id "+newRowID, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.added_good)+newRowID, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "new row failed to create", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.added_no), Toast.LENGTH_SHORT).show();
         }
     }
 }

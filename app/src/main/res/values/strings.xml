@@ -30,7 +30,12 @@
     <string name="germany">Germany</string>
     <string name="france">France</string>
     <string name="england">England</string>
+    <string name="country_unknown">country unknown</string>
 
     <!-- not needed? editor strings [CHAR LIMIT=20] -->
     <string name="editor_activity_title_new_book">Add a Book</string>
+
+    <!-- toast massages -->
+    <string name="added_good">added row id </string>
+    <string name="added_no">new row failed to create</string>
 </resources>
