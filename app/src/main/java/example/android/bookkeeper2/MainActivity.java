@@ -60,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
                 BookEntry._ID,
                 BookEntry.COLUMNS_BOOK_TITLE,
                 BookEntry.COLUMNS_BOOK_AUTHOR,
+                BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY,
+                BookEntry.COLUMNS_BOOK_PRICE,
+                BookEntry.COLUMNS_BOOK_IBSN
         };
 
         // Perform a query on the books table
@@ -76,19 +79,24 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             // Create a header in the Text View that looks like this:
-            // _id - title - author
+            // _id - title - author - county - price - ibsn
             // In the while loop below, iterate through the rows of the cursor and display
             // the information from each column in this order.
             displayView.setText("The pets table contains " + cursor.getCount() + " pets.\n\n");
             displayView.append(BookEntry._ID + " - " +
                     BookEntry.COLUMNS_BOOK_TITLE + " - " +
-                    BookEntry.COLUMNS_BOOK_AUTHOR + "\n");
+                    BookEntry.COLUMNS_BOOK_AUTHOR + " - " +
+                    BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY + " - " +
+                    BookEntry.COLUMNS_BOOK_PRICE + " - " +
+                    BookEntry.COLUMNS_BOOK_IBSN + "\n");
 
             // Figure out the index of each column
             int idColumnIndex = cursor.getColumnIndex(BookEntry._ID);
             int titleColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_TITLE);
             int authorColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_AUTHOR);
-
+            int countyColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY);
+            int priceColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_PRICE);
+            int ibsnColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_IBSN);
             // Iterate through all the returned rows in the cursor
             while (cursor.moveToNext()) {
                 // Use that index to extract the String or Int value of the word
@@ -96,10 +104,16 @@ public class MainActivity extends AppCompatActivity {
                 int currentID = cursor.getInt(idColumnIndex);
                 String currentTitle = cursor.getString(titleColumnIndex);
                 String currentAuthor = cursor.getString(authorColumnIndex);
+                String currentAuthorCounty = cursor.getString(countyColumnIndex);
+                String currentPrice = cursor.getString(priceColumnIndex);
+                String currentISBN = cursor.getString(ibsnColumnIndex);
                 // Display the values from each column of the current row in the cursor in the TextView
                 displayView.append(("\n" + currentID + " - " +
                         currentTitle + " - " +
-                        currentAuthor + " - "
+                        currentAuthor + " - " +
+                        currentAuthorCounty + " - " +
+                        currentPrice + " - " +
+                        currentISBN + " - "
 
                 ));
             }

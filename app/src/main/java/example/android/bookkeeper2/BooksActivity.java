@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import example.android.bookkeeper2.data.BooksDBHelper;
@@ -22,20 +23,12 @@ public class BooksActivity extends AppCompatActivity {
 
     private BooksDBHelper mDBHelper;
 
-    /** EditText field to enter the author */
+    /** Text fields to enter the book data */
     private EditText mAuthorEditText;
-
-    /** EditText field to enter the books title */
     private EditText mTitleEditText;
-
-    /** EditText field to enter the ibsn */
     private EditText mIbsnEditText;
-
-    /** EditText field to enter the country */
     private Spinner mCountrySpinner;
     private String mCountry;
-
-    /** EditText field to enter price */
     private EditText mPriceEditText;
 
     @Override
@@ -43,14 +36,15 @@ public class BooksActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books);
 
-        // Find all relevant views that we will need to read user input from
-        mAuthorEditText = (EditText) findViewById(R.id.edit_book_title);
-        mTitleEditText = (EditText) findViewById(R.id.edit_author);
-        mIbsnEditText = (EditText) findViewById(R.id.edit_ibsn);
-        mCountrySpinner = (Spinner) findViewById(R.id.spinner_country);
+        // Find all relevant views
+        mAuthorEditText = findViewById(R.id.edit_book_title);
+        mTitleEditText = findViewById(R.id.edit_author);
+        mIbsnEditText = findViewById(R.id.edit_ibsn);
+        mCountrySpinner = findViewById(R.id.spinner_country);
         mPriceEditText = findViewById(R.id.edit_price);
 
         setupSpinner();
+        mDBHelper = new BooksDBHelper(this);
     }
 
     /**
@@ -59,14 +53,14 @@ public class BooksActivity extends AppCompatActivity {
     private void setupSpinner() {
         // Create adapter for spinner. The list options are from the String array it will use
         // the spinner will use the default layout
-        ArrayAdapter genderSpinnerAdapter = ArrayAdapter.createFromResource(this,
+        ArrayAdapter countySpinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.country_array, android.R.layout.simple_spinner_item);
 
         // Specify dropdown layout style - simple list view with 1 item per line
-        genderSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        countySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 
         // Apply the adapter to the spinner
-        mCountrySpinner.setAdapter(genderSpinnerAdapter);
+        mCountrySpinner.setAdapter(countySpinnerAdapter);
 
         // Set the integer mSelected to the constant values
         mCountrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -110,7 +104,6 @@ public class BooksActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
-                Toast.makeText(this, "i have triggered", Toast.LENGTH_SHORT).show();
                 insertData();
                 finish();
                 // Do nothing for now
@@ -121,7 +114,7 @@ public class BooksActivity extends AppCompatActivity {
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
-                // Navigate back to parent activity (CatalogActivity)
+                // Navigate back to parent activity (MainActivity)
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
         }
@@ -131,7 +124,8 @@ public class BooksActivity extends AppCompatActivity {
     private void insertData() {
         String bookTitle = mTitleEditText.getText().toString().trim();
         String bookAuthor = mAuthorEditText.getText().toString().trim();
-        String bookPrice =  mPriceEditText.getText().toString().trim();
+        // add the dollar sign to the price
+        String bookPrice =  "$" + mPriceEditText.getText().toString().trim();
 
         String bIBSN = mIbsnEditText.getText().toString().trim();
         // turn bIBSN to an integer
