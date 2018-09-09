@@ -19,5 +19,6 @@ public final class BooksContract implements BaseColumns {
         public final static String COLUMNS_BOOK_IBSN = "ibsn";
         public final static String COLUMNS_BOOK_AUTHOR_COUNTRY = "country";
         public final static String COLUMNS_BOOK_PRICE = "price";
+        public final static String COLUMNS_BOOK_PHONE = "phone";
     }
 }

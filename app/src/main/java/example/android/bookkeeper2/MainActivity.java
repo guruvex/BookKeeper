@@ -26,10 +26,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     private void displayDatabaseInfo() {
         // Create and/or open a database to read from it
         SQLiteDatabase booksDB = mDBHelper.getReadableDatabase();
-
         // Define a projection that specifies which columns from the database
         // you will actually use after this query.
         String[] projection = {
@@ -61,10 +59,11 @@ public class MainActivity extends AppCompatActivity {
                 BookEntry.COLUMNS_BOOK_TITLE,
                 BookEntry.COLUMNS_BOOK_AUTHOR,
                 BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY,
-                BookEntry.COLUMNS_BOOK_PRICE,
-                BookEntry.COLUMNS_BOOK_IBSN
-        };
+                BookEntry.COLUMNS_BOOK_IBSN,
+                BookEntry.COLUMNS_BOOK_PHONE,
+                BookEntry.COLUMNS_BOOK_PRICE
 
+        };
         // Perform a query on the books table
         Cursor cursor = booksDB.query(
                 BookEntry.TABLE_NAME,   // The table to query
@@ -75,19 +74,20 @@ public class MainActivity extends AppCompatActivity {
                 null,                  // Don't filter by row groups
                 null);                   // The sort order
 
-        TextView displayView = (TextView) findViewById(R.id.text_view_books);
+        TextView displayView = findViewById(R.id.text_view_books);
 
         try {
             // Create a header in the Text View that looks like this:
             // _id - title - author - county - price - ibsn
             // In the while loop below, iterate through the rows of the cursor and display
             // the information from each column in this order.
-            displayView.setText("The pets table contains " + cursor.getCount() + " pets.\n\n");
+            displayView.setText(getString(R.string.table_contains) + cursor.getCount() + getString(R.string.table_contains_2));
             displayView.append(BookEntry._ID + " - " +
                     BookEntry.COLUMNS_BOOK_TITLE + " - " +
                     BookEntry.COLUMNS_BOOK_AUTHOR + " - " +
                     BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY + " - " +
                     BookEntry.COLUMNS_BOOK_PRICE + " - " +
+                    BookEntry.COLUMNS_BOOK_PHONE + " - " +
                     BookEntry.COLUMNS_BOOK_IBSN + "\n");
 
             // Figure out the index of each column
@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
             int authorColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_AUTHOR);
             int countyColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY);
             int priceColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_PRICE);
+            int phoneColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_PHONE);
             int ibsnColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_IBSN);
             // Iterate through all the returned rows in the cursor
             while (cursor.moveToNext()) {
@@ -107,13 +108,15 @@ public class MainActivity extends AppCompatActivity {
                 String currentAuthorCounty = cursor.getString(countyColumnIndex);
                 String currentPrice = cursor.getString(priceColumnIndex);
                 String currentISBN = cursor.getString(ibsnColumnIndex);
+                String currentPhone = cursor.getString(phoneColumnIndex);
                 // Display the values from each column of the current row in the cursor in the TextView
                 displayView.append(("\n" + currentID + " - " +
                         currentTitle + " - " +
                         currentAuthor + " - " +
                         currentAuthorCounty + " - " +
                         currentPrice + " - " +
-                        currentISBN + " - "
+                        currentPhone + " - " +
+                        currentISBN
 
                 ));
             }
@@ -148,20 +151,18 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void insertBookData(){
+    public void insertBookData() {
         SQLiteDatabase addToDB = mDBHelper.getWritableDatabase();
-
         ContentValues values = new ContentValues();
-        values.put(BookEntry.COLUMNS_BOOK_TITLE,"book a");
-        values.put(BookEntry.COLUMNS_BOOK_AUTHOR,"no one");
-        values.put(BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY,"UK");
-        values.put(BookEntry.COLUMNS_BOOK_IBSN,"1234");
-        values.put(BookEntry.COLUMNS_BOOK_PRICE,"$12.00");
-
-        long newRowID = addToDB.insert(BookEntry.TABLE_NAME,null,values);
-
+        values.put(BookEntry.COLUMNS_BOOK_TITLE, "book a");
+        values.put(BookEntry.COLUMNS_BOOK_AUTHOR, "no one");
+        values.put(BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY, "UK");
+        values.put(BookEntry.COLUMNS_BOOK_IBSN, "1234");
+        values.put(BookEntry.COLUMNS_BOOK_PHONE, "6026660000");
+        values.put(BookEntry.COLUMNS_BOOK_PRICE, "$12.00");
+        long newRowID = addToDB.insert(BookEntry.TABLE_NAME, null, values);
         if (newRowID > -1) {
-            Toast.makeText(this, getString(R.string.added_good)+newRowID, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.added_good) + newRowID, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, getString(R.string.added_no), Toast.LENGTH_SHORT).show();
         }

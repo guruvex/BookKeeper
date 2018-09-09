@@ -13,18 +13,21 @@
 
     <!-- Label for categorys [CHAR LIMIT=30] -->
     <string name="category_overview">Overview</string>
-    <string name="category_measurement">IBSN</string>
+    <string name="category_ibsn">IBSN</string>
     <string name="price_label">Price</string>
     <string name="currency">USD</string>
+    <string name="phone_number">Phone Number</string>
 
     <!-- hint strings [CHAR LIMIT=30] -->
     <string name="hint_book_title">Book Title</string>
     <string name="hint_author">Author</string>
     <string name="hint_ibsn_number">ibsn number</string>
     <string name="hint_price">Price with out sign</string>
+    <string name="hint_phone">10 digit number</string>
 
     <!-- country label -->
     <string name="country_select_text">Select a country</string>
+
     <!-- country strings for array-->
     <string name="usa">USA</string>
     <string name="germany">Germany</string>
@@ -38,4 +41,8 @@
     <!-- toast massages -->
     <string name="added_good">added row id </string>
     <string name="added_no">new row failed to create</string>
+    <string name="table_contains">The book table contains </string>
+    <string name="table_contains_2"> books.\n\n</string>
+    <string name="not_available">This function not working yet</string>
+
 </resources>

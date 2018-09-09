@@ -13,36 +13,36 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Toast;
-
 import example.android.bookkeeper2.data.BooksDBHelper;
 import example.android.bookkeeper2.data.BooksContract.BookEntry;
 
 public class BooksActivity extends AppCompatActivity {
 
     private BooksDBHelper mDBHelper;
-
-    /** Text fields to enter the book data */
+    /**
+     * Text fields to enter the book data
+     */
     private EditText mAuthorEditText;
     private EditText mTitleEditText;
     private EditText mIbsnEditText;
     private Spinner mCountrySpinner;
     private String mCountry;
     private EditText mPriceEditText;
+    private EditText mPhoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books);
-
         // Find all relevant views
         mAuthorEditText = findViewById(R.id.edit_book_title);
         mTitleEditText = findViewById(R.id.edit_author);
         mIbsnEditText = findViewById(R.id.edit_ibsn);
         mCountrySpinner = findViewById(R.id.spinner_country);
         mPriceEditText = findViewById(R.id.edit_price);
-
+        mPhoneNumber = findViewById(R.id.edit_phone);
+        // setup spinner selection
         setupSpinner();
         mDBHelper = new BooksDBHelper(this);
     }
@@ -55,13 +55,10 @@ public class BooksActivity extends AppCompatActivity {
         // the spinner will use the default layout
         ArrayAdapter countySpinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.country_array, android.R.layout.simple_spinner_item);
-
         // Specify dropdown layout style - simple list view with 1 item per line
         countySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-
         // Apply the adapter to the spinner
         mCountrySpinner.setAdapter(countySpinnerAdapter);
-
         // Set the integer mSelected to the constant values
         mCountrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -106,11 +103,10 @@ public class BooksActivity extends AppCompatActivity {
             case R.id.action_save:
                 insertData();
                 finish();
-                // Do nothing for now
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete_all_entries:
-                // Do nothing for now
+                Toast.makeText(this, getString(R.string.not_available), Toast.LENGTH_SHORT).show();
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
@@ -125,24 +121,23 @@ public class BooksActivity extends AppCompatActivity {
         String bookTitle = mTitleEditText.getText().toString().trim();
         String bookAuthor = mAuthorEditText.getText().toString().trim();
         // add the dollar sign to the price
-        String bookPrice =  "$" + mPriceEditText.getText().toString().trim();
-
+        String bookPrice = "$" + mPriceEditText.getText().toString().trim();
         String bIBSN = mIbsnEditText.getText().toString().trim();
-        // turn bIBSN to an integer
+        // turn bIBSN to an integer for database
         int bookIBSN = Integer.parseInt(bIBSN);
-
+        // turn phone number to integer for database
+        String phoneNumber = mPhoneNumber.getText().toString().trim();
+        int bookPhoneNumber = Integer.parseInt(phoneNumber);
         // add book
         SQLiteDatabase addNewBookDB = mDBHelper.getWritableDatabase();
-
         ContentValues values = new ContentValues();
-        values.put(BookEntry.COLUMNS_BOOK_TITLE,bookTitle);
-        values.put(BookEntry.COLUMNS_BOOK_AUTHOR,bookAuthor);
-        values.put(BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY,mCountry);
-        values.put(BookEntry.COLUMNS_BOOK_IBSN,bookIBSN);
-        values.put(BookEntry.COLUMNS_BOOK_PRICE,bookPrice);
-
-        long newRowID = addNewBookDB.insert(BookEntry.TABLE_NAME,null,values);
-
+        values.put(BookEntry.COLUMNS_BOOK_TITLE, bookTitle);
+        values.put(BookEntry.COLUMNS_BOOK_AUTHOR, bookAuthor);
+        values.put(BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY, mCountry);
+        values.put(BookEntry.COLUMNS_BOOK_IBSN, bookIBSN);
+        values.put(BookEntry.COLUMNS_BOOK_PHONE, bookPhoneNumber);
+        values.put(BookEntry.COLUMNS_BOOK_PRICE, bookPrice);
+        long newRowID = addNewBookDB.insert(BookEntry.TABLE_NAME, null, values);
         if (newRowID > -1) {
             Toast.makeText(this, getString(R.string.added_good), Toast.LENGTH_SHORT).show();
         } else {
