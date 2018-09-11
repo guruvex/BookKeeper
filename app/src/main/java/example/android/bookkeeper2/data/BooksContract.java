@@ -1,5 +1,6 @@
 package example.android.bookkeeper2.data;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
@@ -20,5 +21,10 @@ public final class BooksContract implements BaseColumns {
         public final static String COLUMNS_BOOK_AUTHOR_COUNTRY = "country";
         public final static String COLUMNS_BOOK_PRICE = "price";
         public final static String COLUMNS_BOOK_PHONE = "phone";
+        // content authority
+        public static final String CONTENT_AUTHORITY = "example.android.bookkeeper2";
+        public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+        public static final String PATH_BOOKS = TABLE_NAME;
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_BOOKS);
     }
 }

@@ -20,6 +20,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".BooksActivity"></activity>
+        <provider
+            android:name=".data.BookProvider"
+            android:authorities="example.android.bookkeeper2"
+            android:exported="false" />
     </application>
 
 </manifest>
