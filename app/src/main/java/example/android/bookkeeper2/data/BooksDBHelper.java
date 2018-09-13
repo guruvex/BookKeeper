@@ -30,12 +30,12 @@ public class BooksDBHelper extends SQLiteOpenHelper {
         // Create a String that will build the books table
         String SQL_CREATE_BOOKS_TABLE = "CREATE TABLE " + BookEntry.TABLE_NAME + " ("
                 + BookEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + BookEntry.COLUMNS_BOOK_TITLE + " TEXT NOT NULL, "
+                + BookEntry.COLUMNS_BOOK_TITLE + " TEXT, "
                 + BookEntry.COLUMNS_BOOK_AUTHOR + " TEXT, "
-                + BookEntry.COLUMNS_BOOK_IBSN + " INTEGER NOT NULL, "
-                + BookEntry.COLUMNS_BOOK_PHONE + " INTEGER NOT NULL, "
-                + BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY + " TEXT,"
-                + BookEntry.COLUMNS_BOOK_PRICE + " TEXT NOT NULL); ";
+                + BookEntry.COLUMNS_BOOK_IBSN + " INTEGER, "
+                + BookEntry.COLUMNS_BOOK_PHONE + " INTEGER, "
+                + BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY + " TEXT, "
+                + BookEntry.COLUMNS_BOOK_PRICE + " TEXT); ";
         // make the table
         sqLiteDB.execSQL(SQL_CREATE_BOOKS_TABLE);
     }

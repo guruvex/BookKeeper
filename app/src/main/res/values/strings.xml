@@ -44,5 +44,9 @@
     <string name="table_contains">The book table contains </string>
     <string name="table_contains_2"> books.\n\n</string>
     <string name="not_available">This function not working yet</string>
+    <string name="no_title">Please fill in title field</string>
+    <string name="no_ibsn">Please fill in IBSN field</string>
+    <string name="no_phone">Please fill in the phone number field</string>
+    <string name="no_price">Please fill in the price field</string>
 
 </resources>

@@ -147,12 +147,12 @@ public class MainActivity extends AppCompatActivity {
     public void insertBookData() {
 
         ContentValues values = new ContentValues();
-        values.put(BookEntry.COLUMNS_BOOK_TITLE, "book a");
-        values.put(BookEntry.COLUMNS_BOOK_AUTHOR, "no one");
+        values.put(BookEntry.COLUMNS_BOOK_TITLE, "xxx");
+        values.put(BookEntry.COLUMNS_BOOK_AUTHOR, "XXX");
         values.put(BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY, "UK");
         values.put(BookEntry.COLUMNS_BOOK_IBSN, "1234");
         values.put(BookEntry.COLUMNS_BOOK_PHONE, "6026660000");
-        values.put(BookEntry.COLUMNS_BOOK_PRICE, "$12.00");
+        values.put(BookEntry.COLUMNS_BOOK_PRICE, "12");
 
         Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
 
