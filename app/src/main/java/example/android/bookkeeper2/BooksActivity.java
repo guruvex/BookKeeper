@@ -2,6 +2,7 @@ package example.android.bookkeeper2;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -129,7 +130,7 @@ public class BooksActivity extends AppCompatActivity {
         String phoneNumber = mPhoneNumber.getText().toString().trim();
         int bookPhoneNumber = Integer.parseInt(phoneNumber);
         // add book
-        SQLiteDatabase addNewBookDB = mDBHelper.getWritableDatabase();
+
         ContentValues values = new ContentValues();
         values.put(BookEntry.COLUMNS_BOOK_TITLE, bookTitle);
         values.put(BookEntry.COLUMNS_BOOK_AUTHOR, bookAuthor);
@@ -137,11 +138,13 @@ public class BooksActivity extends AppCompatActivity {
         values.put(BookEntry.COLUMNS_BOOK_IBSN, bookIBSN);
         values.put(BookEntry.COLUMNS_BOOK_PHONE, bookPhoneNumber);
         values.put(BookEntry.COLUMNS_BOOK_PRICE, bookPrice);
-        long newRowID = addNewBookDB.insert(BookEntry.TABLE_NAME, null, values);
-        if (newRowID > -1) {
-            Toast.makeText(this, getString(R.string.added_good), Toast.LENGTH_SHORT).show();
-        } else {
+
+        Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
+
+        if (newUri == null) {
             Toast.makeText(this, getString(R.string.added_no), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, getString(R.string.added_good), Toast.LENGTH_SHORT).show();
         }
     }
 }

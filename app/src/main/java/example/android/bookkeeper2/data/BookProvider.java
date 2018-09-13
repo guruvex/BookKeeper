@@ -7,6 +7,9 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.util.Log;
+import android.widget.Toast;
+
 import example.android.bookkeeper2.data.BooksDBHelper;
 import example.android.bookkeeper2.data.BooksContract.BookEntry;
 
@@ -70,7 +73,32 @@ public class BookProvider extends ContentProvider{
      */
     @Override
     public Uri insert(Uri uri, ContentValues contentValues) {
-        return null;
+        final int match = sUriMatcher.match(uri);
+        switch (match) {
+            case BOOKS:
+                return insertBook(uri, contentValues);
+            default:
+                throw new IllegalArgumentException("Insertion is not supported for " + uri);
+        }
+    }
+
+    /**
+     * Insert a pet into the database with the given content values. Return the new content URI
+     * for that specific row in the database.
+     */
+    private Uri insertBook(Uri uri, ContentValues values) {
+        // get DB object
+        SQLiteDatabase database = mDBHelper.getWritableDatabase();
+        // insert new table
+        long id = database.insert(BookEntry.TABLE_NAME, null, values);
+        // see if it worked or not.
+        if (id == -1) {
+            Toast.makeText(getContext(), "insert failed " + uri, Toast.LENGTH_SHORT).show();
+            return null;
+        }
+        // Once we know the ID of the new row in the table,
+        // return the new URI with the ID appended to the end of it
+        return ContentUris.withAppendedId(uri, id);
     }
 
     /**

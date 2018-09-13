@@ -39,8 +39,8 @@
     <string name="editor_activity_title_new_book">Add a Book</string>
 
     <!-- toast massages -->
-    <string name="added_good">added row id </string>
-    <string name="added_no">new row failed to create</string>
+    <string name="added_good">New book added</string>
+    <string name="added_no">Book addition failed</string>
     <string name="table_contains">The book table contains </string>
     <string name="table_contains_2"> books.\n\n</string>
     <string name="not_available">This function not working yet</string>

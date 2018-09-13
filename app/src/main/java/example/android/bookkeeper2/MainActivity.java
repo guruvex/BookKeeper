@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void displayDatabaseInfo() {
         // Create and/or open a database to read from it
-        SQLiteDatabase booksDB = mDBHelper.getReadableDatabase();
+        //SQLiteDatabase booksDB = mDBHelper.getReadableDatabase();
         // Define a projection that specifies which columns from the database
         // you will actually use after this query.
         String[] projection = {
@@ -64,16 +65,8 @@ public class MainActivity extends AppCompatActivity {
                 BookEntry.COLUMNS_BOOK_PRICE
 
         };
-        // Perform a query on the books table
-        Cursor cursor = booksDB.query(
-                BookEntry.TABLE_NAME,   // The table to query
-                projection,            // The columns to return
-                null,                  // The columns for the WHERE clause
-                null,                  // The values for the WHERE clause
-                null,                  // Don't group the rows
-                null,                  // Don't filter by row groups
-                null);                   // The sort order
 
+        Cursor cursor = getContentResolver().query(BookEntry.CONTENT_URI,projection,null,null,null);
         TextView displayView = findViewById(R.id.text_view_books);
 
         try {
@@ -152,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void insertBookData() {
-        SQLiteDatabase addToDB = mDBHelper.getWritableDatabase();
+
         ContentValues values = new ContentValues();
         values.put(BookEntry.COLUMNS_BOOK_TITLE, "book a");
         values.put(BookEntry.COLUMNS_BOOK_AUTHOR, "no one");
@@ -160,11 +153,13 @@ public class MainActivity extends AppCompatActivity {
         values.put(BookEntry.COLUMNS_BOOK_IBSN, "1234");
         values.put(BookEntry.COLUMNS_BOOK_PHONE, "6026660000");
         values.put(BookEntry.COLUMNS_BOOK_PRICE, "$12.00");
-        long newRowID = addToDB.insert(BookEntry.TABLE_NAME, null, values);
-        if (newRowID > -1) {
-            Toast.makeText(this, getString(R.string.added_good) + newRowID, Toast.LENGTH_SHORT).show();
-        } else {
+
+        Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
+
+        if (newUri == null) {
             Toast.makeText(this, getString(R.string.added_no), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, getString(R.string.added_good), Toast.LENGTH_SHORT).show();
         }
     }
 }
