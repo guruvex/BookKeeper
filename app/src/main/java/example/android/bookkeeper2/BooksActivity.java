@@ -15,6 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import example.android.bookkeeper2.data.BookProvider;
 import example.android.bookkeeper2.data.BooksDBHelper;
 import example.android.bookkeeper2.data.BooksContract.BookEntry;
 
@@ -123,28 +125,25 @@ public class BooksActivity extends AppCompatActivity {
         String bookAuthor = mAuthorEditText.getText().toString().trim();
         // add the dollar sign to the price
         String bookPrice = "$" + mPriceEditText.getText().toString().trim();
-        String bIBSN = mIbsnEditText.getText().toString().trim();
-        // turn bIBSN to an integer for database
-        int bookIBSN = Integer.parseInt(bIBSN);
+        String bookIBSN = mIbsnEditText.getText().toString().trim();
         // turn phone number to integer for database
         String phoneNumber = mPhoneNumber.getText().toString().trim();
-        int bookPhoneNumber = Integer.parseInt(phoneNumber);
-        // add book
+
 
         ContentValues values = new ContentValues();
         values.put(BookEntry.COLUMNS_BOOK_TITLE, bookTitle);
         values.put(BookEntry.COLUMNS_BOOK_AUTHOR, bookAuthor);
         values.put(BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY, mCountry);
         values.put(BookEntry.COLUMNS_BOOK_IBSN, bookIBSN);
-        values.put(BookEntry.COLUMNS_BOOK_PHONE, bookPhoneNumber);
+        values.put(BookEntry.COLUMNS_BOOK_PHONE, phoneNumber);
         values.put(BookEntry.COLUMNS_BOOK_PRICE, bookPrice);
+        // add book
 
-        Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
-
-        if (newUri == null) {
-            Toast.makeText(this, getString(R.string.added_no), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, getString(R.string.added_good), Toast.LENGTH_SHORT).show();
-        }
+            Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
+            if (newUri == null) {
+                Toast.makeText(this, getString(R.string.added_no), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, getString(R.string.added_good), Toast.LENGTH_SHORT).show();
+            }
     }
 }

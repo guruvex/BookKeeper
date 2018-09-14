@@ -85,47 +85,53 @@ public class BookProvider extends ContentProvider{
     }
 
     /**
-     * Insert a pet into the database with the given content values. Return the new content URI
+     * Insert a book into the database with the given content values. Return the new content URI
      * for that specific row in the database.
      */
-    private Uri insertBook(Uri uri, ContentValues values) {
+    private Uri insertBook(Uri uri, ContentValues values) throws IllegalArgumentException {
         //check incoming data
         // check title
-        String checkString = values.getAsString(BookEntry.COLUMNS_BOOK_TITLE);
-        Log.v("string ",checkString);
-        if (checkString == null) {
-            throw new IllegalArgumentException("add title");
-        }
-        //check ibsn
-        Integer checkValue = values.getAsInteger(BookEntry.COLUMNS_BOOK_IBSN);
-        Log.v("val ",checkValue.toString());
-        if (checkValue == null) {
-            throw new IllegalArgumentException("add ibsn");
-        }
-        //check price
-        checkString = values.getAsString(BookEntry.COLUMNS_BOOK_PRICE);
-        Log.v("string ",checkString);
-        if (checkString == null) {
-            throw new IllegalArgumentException("add price");
-        }
-        //check phone number
-        checkValue = values.getAsInteger(BookEntry.COLUMNS_BOOK_PHONE);
-        Log.v("val ",checkValue.toString());
-        if (checkValue == null) {
-            throw new IllegalArgumentException("add phone number");
-        }
-        // get DB object
-        SQLiteDatabase database = mDBHelper.getWritableDatabase();
-        // insert new table
-        long id = database.insert(BookEntry.TABLE_NAME, null, values);
-        // see if it worked or not.
-        if (id == -1) {
-            Toast.makeText(getContext(), "not added", Toast.LENGTH_SHORT).show();
+        String checkString;
+        boolean isInputGood = true;
+
+        checkString = values.getAsString(BookEntry.COLUMNS_BOOK_TITLE);
+        if (checkString == null || checkString == "") {
+            //throw new IllegalArgumentException("add title");
+            Toast.makeText(getContext(), "add book name", Toast.LENGTH_SHORT).show();
+            isInputGood = false;
             return null;
         }
-        // Once we know the ID of the new row in the table,
-        // return the new URI with the ID appended to the end of it
-        return ContentUris.withAppendedId(uri, id);
+        //check ibsn
+        checkString = values.getAsString(BookEntry.COLUMNS_BOOK_IBSN);
+        if (checkString == null|| checkString == "") {
+            //throw new IllegalArgumentException("add ibsn");
+            Toast.makeText(getContext(), "add book ibsn", Toast.LENGTH_SHORT).show();
+            isInputGood = false;
+            return null;
+        }
+        //check phone number
+        checkString = values.getAsString(BookEntry.COLUMNS_BOOK_PHONE);
+        if (checkString == null||checkString == "") {
+         //   throw new IllegalArgumentException("add phone number");
+            Toast.makeText(getContext(), "add phone number", Toast.LENGTH_SHORT).show();
+            isInputGood = false;
+            return null;
+        }
+
+        if (isInputGood) {
+            // get DB object
+            SQLiteDatabase database = mDBHelper.getWritableDatabase();
+            // insert new table
+            long id = database.insert(BookEntry.TABLE_NAME, null, values);
+            // see if it worked or not.
+            if (id == -1) {
+                Toast.makeText(getContext(), "not added", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+            // Once we know the ID of the new row in the table,
+            // return the new URI with the ID appended to the end of it
+            return ContentUris.withAppendedId(uri, id);
+        } else {return null;}
     }
 
     /**
