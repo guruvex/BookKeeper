@@ -16,7 +16,7 @@ package example.android.bookkeeper2;
  * that uses a {@link Cursor} of pet data as its data source. This adapter knows
  * how to create list items for each row of pet data in the {@link Cursor}.
  */
-
+//ToDo: clean up this code and remove useless comments.
 /**
  * Created by james on 9/18/2018.
  */

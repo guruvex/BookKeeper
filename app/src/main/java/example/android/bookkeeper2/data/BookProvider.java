@@ -157,19 +157,32 @@ public class BookProvider extends ContentProvider {
         // Get writeable database
         SQLiteDatabase database = mDBHelper.getWritableDatabase();
 
+        int rowsDeleted;
+
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case BOOKS:
                 // Delete all rows that match the selection and selection args
-                return database.delete(BookEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = database.delete(BookEntry.TABLE_NAME, selection, selectionArgs);
+                break;
             case BOOKS_ID:
                 // Delete a single row given by the ID in the URI
                 selection = BookEntry._ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
-                return database.delete(BookEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = database.delete(BookEntry.TABLE_NAME, selection, selectionArgs);
+                break;
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
         }
+
+        // If 1 or more rows were deleted, then notify all listeners that the data at the
+        // given URI has changed
+        if (rowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        // Return the number of rows deleted
+        return rowsDeleted;
     }
 
     /**
@@ -186,37 +199,5 @@ public class BookProvider extends ContentProvider {
             default:
                 throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
         }
-    }
-
-    private int updateBook(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-
-// If the {@link PetEntry#COLUMN_PET_NAME} key is present,
-        // check that the name value is not null.
-        if (values.containsKey(BookEntry.COLUMNS_BOOK_TITLE)) {
-            String name = values.getAsString(BookEntry.COLUMNS_BOOK_TITLE);
-            if (name == null) {
-                throw new IllegalArgumentException("Pet requires a name");
-            }
-        }
-
-        // If the {@link PetEntry#COLUMN_PET_WEIGHT} key is present,
-        // check that the weight value is valid.
-        if (values.containsKey(BookEntry.COLUMNS_BOOK_IBSN)) {
-            // Check that the weight is greater than or equal to 0 kg
-            Integer weight = values.getAsInteger(BookEntry.COLUMNS_BOOK_IBSN);
-            if (weight == null) {
-                throw new IllegalArgumentException("Pet requires valid weight");
-            }
-        }
-
-        // No need to check the breed, any value is valid (including null).
-        if (values.size() == 0) {
-            return 0;
-        }
-        // Otherwise, get writeable database to update the data
-        SQLiteDatabase database = mDBHelper.getWritableDatabase();
-
-        // Returns the number of database rows affected by the update statement
-        return database.update(BookEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 }

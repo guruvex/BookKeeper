@@ -34,8 +34,8 @@ public class BooksDBHelper extends SQLiteOpenHelper {
                 + BookEntry.COLUMNS_BOOK_AUTHOR + " TEXT, "
                 + BookEntry.COLUMNS_BOOK_IBSN + " TEXT, "
                 + BookEntry.COLUMNS_BOOK_PHONE + " TEXT, "
-                + BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY + " TEXT, "
                 + BookEntry.COLUMNS_BOOK_PRICE + " TEXT); ";
+        //ToDo: add quantity for data here
         // make the table
         sqLiteDB.execSQL(SQL_CREATE_BOOKS_TABLE);
     }

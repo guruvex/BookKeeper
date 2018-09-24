@@ -20,6 +20,8 @@ import android.widget.ListView;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
+import java.net.URI;
+
 import example.android.bookkeeper2.data.BooksDBHelper;
 import example.android.bookkeeper2.data.BooksContract.BookEntry;
 
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         ListView listView = findViewById(R.id.list);
         View emptyView = findViewById(R.id.empty_view);
-        // if theres no data
+        // if there's no data
         listView.setEmptyView(emptyView);
 
         mCursorAdaptor = new BookCursorAdaptor(this,null);
@@ -54,13 +56,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 startActivity(intent);
             }
         });
+        //ToDo: may not need this DB object
         //mDBHelper = new BooksDBHelper(this);
-
 
         // start loader
         getLoaderManager().initLoader(BookLoader,null,this);
 
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, BooksActivity.class);
+                Uri bookSelected = ContentUris.withAppendedId(BookEntry.CONTENT_URI,id);
+                intent.setData(bookSelected);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -69,81 +79,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //displayDatabaseInfo();
     }
 
-    /**
-     * Temporary helper method to display information in the onscreen TextView about the state of
-     * the pets database.
-     */
-
-    /**
-    private void displayDatabaseInfo() {
-        // Create and/or open a database to read from it
-        //SQLiteDatabase booksDB = mDBHelper.getReadableDatabase();
-        // Define a projection that specifies which columns from the database
-        // you will actually use after this query.
-        String[] projection = {
-                BookEntry._ID,
-                BookEntry.COLUMNS_BOOK_TITLE,
-                BookEntry.COLUMNS_BOOK_AUTHOR,
-                BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY,
-                BookEntry.COLUMNS_BOOK_IBSN,
-                BookEntry.COLUMNS_BOOK_PHONE,
-                BookEntry.COLUMNS_BOOK_PRICE
-
-        };
-
-        Cursor cursor = getContentResolver().query(BookEntry.CONTENT_URI,projection,null,null,null);
-        TextView displayView = findViewById(R.id.text_view_books);
-
-        try {
-            // Create a header in the Text View that looks like this:
-            // _id - title - author - county - price - ibsn
-            // In the while loop below, iterate through the rows of the cursor and display
-            // the information from each column in this order.
-            displayView.setText(getString(R.string.table_contains) + cursor.getCount() + getString(R.string.table_contains_2));
-            displayView.append(BookEntry._ID + " - " +
-                    BookEntry.COLUMNS_BOOK_TITLE + " - " +
-                    BookEntry.COLUMNS_BOOK_AUTHOR + " - " +
-                    BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY + " - " +
-                    BookEntry.COLUMNS_BOOK_PRICE + " - " +
-                    BookEntry.COLUMNS_BOOK_PHONE + " - " +
-                    BookEntry.COLUMNS_BOOK_IBSN + "\n");
-
-            // Figure out the index of each column
-            int idColumnIndex = cursor.getColumnIndex(BookEntry._ID);
-            int titleColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_TITLE);
-            int authorColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_AUTHOR);
-            int countyColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY);
-            int priceColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_PRICE);
-            int phoneColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_PHONE);
-            int ibsnColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_IBSN);
-            // Iterate through all the returned rows in the cursor
-            while (cursor.moveToNext()) {
-                // Use that index to extract the String or Int value of the word
-                // at the current row the cursor is on.
-                int currentID = cursor.getInt(idColumnIndex);
-                String currentTitle = cursor.getString(titleColumnIndex);
-                String currentAuthor = cursor.getString(authorColumnIndex);
-                String currentAuthorCounty = cursor.getString(countyColumnIndex);
-                String currentPrice = cursor.getString(priceColumnIndex);
-                String currentISBN = cursor.getString(ibsnColumnIndex);
-                String currentPhone = cursor.getString(phoneColumnIndex);
-                // Display the values from each column of the current row in the cursor in the TextView
-                displayView.append(("\n" + currentID + " - " +
-                        currentTitle + " - " +
-                        currentAuthor + " - " +
-                        currentAuthorCounty + " - " +
-                        currentPrice + " - " +
-                        currentPhone + " - " +
-                        currentISBN
-
-                ));
-            }
-        } finally {
-            cursor.close();
-        }
-    }
-
-     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu.
@@ -176,10 +111,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ContentValues values = new ContentValues();
         values.put(BookEntry.COLUMNS_BOOK_TITLE, "xxx");
         values.put(BookEntry.COLUMNS_BOOK_AUTHOR, "XXX");
-        values.put(BookEntry.COLUMNS_BOOK_AUTHOR_COUNTRY, "UK");
         values.put(BookEntry.COLUMNS_BOOK_IBSN, "1234");
         values.put(BookEntry.COLUMNS_BOOK_PHONE, "6026660000");
         values.put(BookEntry.COLUMNS_BOOK_PRICE, "12");
+        //ToDo: add quantity for data here
 
         Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
 

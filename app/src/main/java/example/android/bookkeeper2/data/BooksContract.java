@@ -19,9 +19,9 @@ public final class BooksContract implements BaseColumns {
         public final static String COLUMNS_BOOK_TITLE = "title";
         public final static String COLUMNS_BOOK_AUTHOR = "author";
         public final static String COLUMNS_BOOK_IBSN = "ibsn";
-        public final static String COLUMNS_BOOK_AUTHOR_COUNTRY = "country";
         public final static String COLUMNS_BOOK_PRICE = "price";
         public final static String COLUMNS_BOOK_PHONE = "phone";
+        //ToDo: add quantity for data base here
         // content authority
         public static final String CONTENT_AUTHORITY = "example.android.bookkeeper2";
         public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
@@ -33,5 +33,14 @@ public final class BooksContract implements BaseColumns {
 
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_BOOKS;
+
+        // extra stuff
+        /**
+         * Possible values for the gender of the pet.
+         */
+        public static final int GENDER_UNKNOWN = 0;
+        public static final int GENDER_MALE = 1;
+        public static final int GENDER_FEMALE = 2;
+
     }
 }
