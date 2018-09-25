@@ -1,45 +1,37 @@
 package example.android.bookkeeper2;
 
 import android.app.AlertDialog;
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.app.LoaderManager;
-import example.android.bookkeeper2.data.BookProvider;
-import example.android.bookkeeper2.data.BooksDBHelper;
 import example.android.bookkeeper2.data.BooksContract.BookEntry;
 import android.content.CursorLoader;
 
 public class BooksActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>{
 
-    private BooksDBHelper mDBHelper;
     /**
      * Text fields to enter the book data
      */
     private static final int BookLoader = 0;
-    private Uri mCurrentPetUri;
+    private Uri mCurrentBookUri;
     // added fields for testing
 // ToDo: fix this
     private EditText mNameEditText;
@@ -48,13 +40,6 @@ public class BooksActivity extends AppCompatActivity implements
     private Spinner mGenderSpinner;
     private int mGender = BookEntry.GENDER_UNKNOWN;
     private boolean mPetHasChanged = false;
-
-
-
-//    public CursorLoader mCursorLoader;
-//    private Button mMoreButton;
-//    private Button mLessButton;
-//    private EditText mQuantityField;
 
     /**
      * OnTouchListener that listens for any user touches on a View, implying that they are modifying
@@ -72,26 +57,23 @@ public class BooksActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books);
-
-        //Toolbar toolbar = findViewById(R.id.toolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Examine the intent that was used to launch this activity,
         // in order to figure out if we're creating a new pet or editing an existing one.
         Intent intent = getIntent();
-        mCurrentPetUri = intent.getData();
+        mCurrentBookUri = intent.getData();
 
         // If the intent DOES NOT contain a pet content URI, then we know that we are
         // creating a new pet.
-        if (mCurrentPetUri == null) {
-            // This is a new pet, so change the app bar to say "Add a Pet"
-            setTitle(getString(R.string.editor_activity_title_new_pet));
+        if (mCurrentBookUri == null) {
+            // This is a new pet, so change the app bar to say "Add a book"
+            setTitle(getString(R.string.editor_activity_title_new_book));
 
             // Invalidate the options menu, so the "Delete" menu option can be hidden.
             // (It doesn't make sense to delete a pet that hasn't been created yet.)
             invalidateOptionsMenu();
         } else {
-            // Otherwise this is an existing pet, so change app bar to say "Edit Pet"
-            setTitle(getString(R.string.editor_activity_title_edit_pet));
+            // Otherwise this is an existing pet, so change app bar to say "Edit book"
+            setTitle(getString(R.string.editor_activity_title_edit_book));
 
             // Initialize a loader to read the pet data from the database
             // and display the current values in the editor
@@ -102,7 +84,7 @@ public class BooksActivity extends AppCompatActivity implements
         mNameEditText = (EditText) findViewById(R.id.edit_pet_name);
         mBreedEditText = (EditText) findViewById(R.id.edit_pet_breed);
         mWeightEditText = (EditText) findViewById(R.id.edit_pet_weight);
-        mGenderSpinner = (Spinner) findViewById(R.id.spinner_gender);
+        mGenderSpinner = (Spinner) findViewById(R.id.spinner_available);
 
         // Setup OnTouchListeners on all the input fields, so we can determine if the user
         // has touched or modified them. This will let us know if there are unsaved changes
@@ -122,6 +104,7 @@ public class BooksActivity extends AppCompatActivity implements
     private void setupSpinner() {
         // Create adapter for spinner. The list options are from the String array it will use
         // the spinner will use the default layout
+        //ToDo: fix array so it dont say gender
         ArrayAdapter genderSpinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.array_gender_options, android.R.layout.simple_spinner_item);
 
@@ -136,10 +119,11 @@ public class BooksActivity extends AppCompatActivity implements
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selection = (String) parent.getItemAtPosition(position);
+                //ToDo: fix this
                 if (!TextUtils.isEmpty(selection)) {
-                    if (selection.equals(getString(R.string.gender_male))) {
+                    if (selection.equals(getString(R.string.can_sell_yes))) {
                         mGender = BookEntry.GENDER_MALE;
-                    } else if (selection.equals(getString(R.string.gender_female))) {
+                    } else if (selection.equals(getString(R.string.can_sell_no))) {
                         mGender = BookEntry.GENDER_FEMALE;
                     } else {
                         mGender = BookEntry.GENDER_UNKNOWN;
@@ -150,6 +134,7 @@ public class BooksActivity extends AppCompatActivity implements
             // Because AdapterView is an abstract class, onNothingSelected must be defined
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+                //ToDo: fix this
                 mGender = BookEntry.GENDER_UNKNOWN;
             }
         });
@@ -159,6 +144,7 @@ public class BooksActivity extends AppCompatActivity implements
      * Get user input from editor and save pet into database.
      */
     private void savePet() {
+        //ToDo: update fields here to add new ones
         // Read from input fields
         // Use trim to eliminate leading or trailing white space
         String nameString = mNameEditText.getText().toString().trim();
@@ -167,7 +153,7 @@ public class BooksActivity extends AppCompatActivity implements
 
         // Check if this is supposed to be a new pet
         // and check if all the fields in the editor are blank
-        if (mCurrentPetUri == null &&
+        if (mCurrentBookUri == null &&
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(breedString) &&
                 TextUtils.isEmpty(weightString) && mGender == BookEntry.GENDER_UNKNOWN) {
             // Since no fields were modified, we can return early without creating a new pet.
@@ -190,7 +176,7 @@ public class BooksActivity extends AppCompatActivity implements
         values.put(BookEntry.COLUMNS_BOOK_PHONE, weight);
 
         // Determine if this is a new or existing pet by checking if mCurrentPetUri is null or not
-        if (mCurrentPetUri == null) {
+        if (mCurrentBookUri == null) {
             // This is a NEW pet, so insert a new pet into the provider,
             // returning the content URI for the new pet.
             Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
@@ -198,11 +184,11 @@ public class BooksActivity extends AppCompatActivity implements
             // Show a toast message depending on whether or not the insertion was successful.
             if (newUri == null) {
                 // If the new content URI is null, then there was an error with insertion.
-                Toast.makeText(this, getString(R.string.editor_insert_pet_failed),
+                Toast.makeText(this, getString(R.string.editor_insert_book_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
                 // Otherwise, the insertion was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.editor_insert_pet_successful),
+                Toast.makeText(this, getString(R.string.editor_insert_book_successful),
                         Toast.LENGTH_SHORT).show();
             }
         } else {
@@ -210,16 +196,17 @@ public class BooksActivity extends AppCompatActivity implements
             // and pass in the new ContentValues. Pass in null for the selection and selection args
             // because mCurrentPetUri will already identify the correct row in the database that
             // we want to modify.
-            int rowsAffected = getContentResolver().update(mCurrentPetUri, values, null, null);
+            int rowsAffected = getContentResolver().update(mCurrentBookUri, values, null, null);
 
+            //ToDo: change toast here
             // Show a toast message depending on whether or not the update was successful.
             if (rowsAffected == 0) {
                 // If no rows were affected, then there was an error with the update.
-                Toast.makeText(this, getString(R.string.editor_update_pet_failed),
+                Toast.makeText(this, getString(R.string.editor_update_book_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
                 // Otherwise, the update was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.editor_update_pet_successful),
+                Toast.makeText(this, getString(R.string.editor_update_book_successful),
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -240,8 +227,8 @@ public class BooksActivity extends AppCompatActivity implements
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        // If this is a new pet, hide the "Delete" menu item.
-        if (mCurrentPetUri == null) {
+        // If this is a new book, hide the "Delete" menu item.
+        if (mCurrentBookUri == null) {
             MenuItem menuItem = menu.findItem(R.id.action_delete);
             menuItem.setVisible(false);
         }
@@ -272,7 +259,6 @@ public class BooksActivity extends AppCompatActivity implements
                     NavUtils.navigateUpFromSameTask(BooksActivity.this);
                     return true;
                 }
-
                 // Otherwise if there are unsaved changes, setup a dialog to warn the user.
                 // Create a click listener to handle the user confirming that
                 // changes should be discarded.
@@ -298,6 +284,7 @@ public class BooksActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         // If the pet hasn't changed, continue with handling back button press
+        //ToDo: fix this name
         if (!mPetHasChanged) {
             super.onBackPressed();
             return;
@@ -321,7 +308,7 @@ public class BooksActivity extends AppCompatActivity implements
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         // Since the editor shows all pet attributes, define a projection that contains
-        // all columns from the pet table
+        // all columns from the book table
         String[] projection = {
                 BookEntry._ID,
                 BookEntry.COLUMNS_BOOK_TITLE,
@@ -331,7 +318,7 @@ public class BooksActivity extends AppCompatActivity implements
 
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context
-                mCurrentPetUri,         // Query the content URI for the current pet
+                mCurrentBookUri,         // Query the content URI for the current book
                 projection,             // Columns to include in the resulting Cursor
                 null,                   // No selection clause
                 null,                   // No selection arguments
@@ -344,7 +331,7 @@ public class BooksActivity extends AppCompatActivity implements
         if (cursor == null || cursor.getCount() < 1) {
             return;
         }
-
+        //ToDo fix all this shit.
         // Proceed with moving to the first row of the cursor and reading data from it
         // (This should be the only row in the cursor)
         if (cursor.moveToFirst()) {
@@ -361,12 +348,14 @@ public class BooksActivity extends AppCompatActivity implements
             int weight = cursor.getInt(weightColumnIndex);
 
             // Update the views on the screen with the values from the database
+            //ToDo: update and fix names and add the other views.
             mNameEditText.setText(name);
             mBreedEditText.setText(breed);
             mWeightEditText.setText(Integer.toString(weight));
 
+            //ToDo: update spinner name
             // Gender is a dropdown spinner, so map the constant value from the database
-            // into one of the dropdown options (0 is Unknown, 1 is Male, 2 is Female).
+            // into one of the dropdown options (0 is Unknown, 1 is yes, 2 is no).
             // Then call setSelection() so that option is displayed on screen as the current selection.
             switch (gender) {
                 case BookEntry.GENDER_MALE:
@@ -388,15 +377,13 @@ public class BooksActivity extends AppCompatActivity implements
         mNameEditText.setText("");
         mBreedEditText.setText("");
         mWeightEditText.setText("");
-        mGenderSpinner.setSelection(0); // Select "Unknown" gender
+        mGenderSpinner.setSelection(0); // Select "Unknown" option
+        //ToDo: clear out other fields
     }
 
     /**
      * Show a dialog that warns the user there are unsaved changes that will be lost
      * if they continue leaving the editor.
-     *
-     * @param discardButtonClickListener is the click listener for what to do when
-     *                                   the user confirms they want to discard their changes
      */
     private void showUnsavedChangesDialog(
             DialogInterface.OnClickListener discardButtonClickListener) {
@@ -408,13 +395,12 @@ public class BooksActivity extends AppCompatActivity implements
         builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Keep editing" button, so dismiss the dialog
-                // and continue editing the pet.
+                // and continue editing the book.
                 if (dialog != null) {
                     dialog.dismiss();
                 }
             }
         });
-
         // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
@@ -430,44 +416,43 @@ public class BooksActivity extends AppCompatActivity implements
         builder.setMessage(R.string.delete_dialog_msg);
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Delete" button, so delete the pet.
-                deletePet();
+                // User clicked the "Delete" button, so delete the book.
+                deleteBook();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Cancel" button, so dismiss the dialog
-                // and continue editing the pet.
+                // and continue editing the book.
                 if (dialog != null) {
                     dialog.dismiss();
                 }
             }
         });
-
         // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
 
     /**
-     * Perform the deletion of the pet in the database.
+     * delete Book in the database.
      */
-    private void deletePet() {
-        // Only perform the delete if this is an existing pet.
-        if (mCurrentPetUri != null) {
+    private void deleteBook() {
+        // Only perform the delete if this is an existing book.
+        if (mCurrentBookUri != null) {
             // Call the ContentResolver to delete the pet at the given content URI.
-            // Pass in null for the selection and selection args because the mCurrentPetUri
-            // content URI already identifies the pet that we want.
-            int rowsDeleted = getContentResolver().delete(mCurrentPetUri, null, null);
+            // Pass in null for the selection and selection args because the mCurrentBookUri
+            // content URI already identifies the book that we want.
+            int rowsDeleted = getContentResolver().delete(mCurrentBookUri, null, null);
 
             // Show a toast message depending on whether or not the delete was successful.
             if (rowsDeleted == 0) {
                 // If no rows were deleted, then there was an error with the delete.
-                Toast.makeText(this, getString(R.string.editor_delete_pet_failed),
+                Toast.makeText(this, getString(R.string.editor_delete_book_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
                 // Otherwise, the delete was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.editor_delete_pet_successful),
+                Toast.makeText(this, getString(R.string.editor_delete_book_successful),
                         Toast.LENGTH_SHORT).show();
             }
         }

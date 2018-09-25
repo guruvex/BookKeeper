@@ -1,6 +1,6 @@
 package example.android.bookkeeper2;
 
-        import android.content.Context;
+import android.content.Context;
         import android.database.Cursor;
         import android.text.TextUtils;
         import android.view.LayoutInflater;
@@ -11,11 +11,6 @@ package example.android.bookkeeper2;
 
         import example.android.bookkeeper2.data.BooksContract.BookEntry;
 
-/**
- * {@link PetCursorAdapter} is an adapter for a list or grid view
- * that uses a {@link Cursor} of pet data as its data source. This adapter knows
- * how to create list items for each row of pet data in the {@link Cursor}.
- */
 //ToDo: clean up this code and remove useless comments.
 /**
  * Created by james on 9/18/2018.
@@ -70,7 +65,7 @@ public class BookCursorAdaptor extends CursorAdapter {
         // Read the pet attributes from the Cursor for the current pet
         String petName = cursor.getString(titleColumnIndex);
         String petBreed = cursor.getString(authorColumnIndex);
-
+        //ToDo: fix petname and breed here to title and author
         // Update the TextViews with the attributes for the current pet
         titleTextView.setText(petName);
         authorTextView.setText(petBreed);

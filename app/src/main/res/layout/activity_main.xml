@@ -35,7 +35,7 @@
 
             android:fontFamily="sans-serif-medium"
             android:paddingTop="16dp"
-            android:text="no data"
+            android:text="@string/empty_view_title_text"
             android:textAppearance="?android:textAppearanceMedium"/>
 
         <TextView
@@ -46,7 +46,7 @@
             android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif"
             android:paddingTop="8dp"
-            android:text="no data at all"
+            android:text="@string/empty_view_subtitle_text"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="#A2AAB0"/>
     </RelativeLayout>

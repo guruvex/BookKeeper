@@ -20,15 +20,10 @@ import android.widget.ListView;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
-import java.net.URI;
-
-import example.android.bookkeeper2.data.BooksDBHelper;
 import example.android.bookkeeper2.data.BooksContract.BookEntry;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    // make the DB object
-    private BooksDBHelper mDBHelper;
     // make cursor to use for cursor loader
     private static final int BookLoader = 0;
     BookCursorAdaptor mCursorAdaptor;
@@ -45,10 +40,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         View emptyView = findViewById(R.id.empty_view);
         // if there's no data
         listView.setEmptyView(emptyView);
-
+        // make new cursor
         mCursorAdaptor = new BookCursorAdaptor(this,null);
         listView.setAdapter(mCursorAdaptor);
-
+        // floating action button listener
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,12 +51,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 startActivity(intent);
             }
         });
-        //ToDo: may not need this DB object
-        //mDBHelper = new BooksDBHelper(this);
-
         // start loader
         getLoaderManager().initLoader(BookLoader,null,this);
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -76,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onStart() {
         super.onStart();
-        //displayDatabaseInfo();
     }
 
     @Override
@@ -100,14 +90,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:
                 deleteAllBooks();
-                //displayDatabaseInfo();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     public void insertBookData() {
-
         ContentValues values = new ContentValues();
         values.put(BookEntry.COLUMNS_BOOK_TITLE, "xxx");
         values.put(BookEntry.COLUMNS_BOOK_AUTHOR, "XXX");
@@ -117,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //ToDo: add quantity for data here
 
         Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
-
         if (newUri == null) {
             Toast.makeText(this, getString(R.string.added_no), Toast.LENGTH_SHORT).show();
         } else {
@@ -131,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
         String [] projection = {
                 BookEntry._ID,
                 BookEntry.COLUMNS_BOOK_TITLE,
