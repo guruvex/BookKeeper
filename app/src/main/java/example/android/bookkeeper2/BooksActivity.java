@@ -21,11 +21,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.app.LoaderManager;
+
 import example.android.bookkeeper2.data.BooksContract.BookEntry;
+
 import android.content.CursorLoader;
 
 public class BooksActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor>{
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     /**
      * Text fields to enter the book data
@@ -33,7 +35,6 @@ public class BooksActivity extends AppCompatActivity implements
     private static final int BookLoader = 0;
     private Uri mCurrentBookUri;
     // added fields for testing
-// ToDo: fix this
     private EditText mTitleEditText;
     private EditText mAuthorEditText;
     private EditText mIbsnEditText;
@@ -43,7 +44,6 @@ public class BooksActivity extends AppCompatActivity implements
     private Spinner mCanSellSpinner;
     private int mCanSell = BookEntry.CAN_SELL_UNKNOWN;
     private boolean mBookHasChanged = false;
-
     /**
      * OnTouchListener that listens for any user touches on a View, implying that they are modifying
      * the view, and we change the mBookHasChanged boolean to true.
@@ -63,7 +63,6 @@ public class BooksActivity extends AppCompatActivity implements
         // if a book was clicked on, pull the URI from the last activity
         Intent intent = getIntent();
         mCurrentBookUri = intent.getData();
-
         // If the intent DOES NOT contain a book content URI, then we know that we are
         // creating a new book.
         if (mCurrentBookUri == null) {
@@ -75,7 +74,6 @@ public class BooksActivity extends AppCompatActivity implements
             setTitle(getString(R.string.editor_activity_title_edit_book));
             getLoaderManager().initLoader(BookLoader, null, this);
         }
-
         // Find all relevant views that we will need to read user input from
         mTitleEditText = findViewById(R.id.edit_title_name);
         mAuthorEditText = findViewById(R.id.edit_author_name);
@@ -91,9 +89,10 @@ public class BooksActivity extends AppCompatActivity implements
         mAuthorEditText.setOnTouchListener(mTouchListener);
         mIbsnEditText.setOnTouchListener(mTouchListener);
         mCanSellSpinner.setOnTouchListener(mTouchListener);
-
+        // set the spinner to current state
         setupSpinner();
     }
+
     /**
      * Setup the dropdown spinner that allows the user to select the availability of the book.
      */
@@ -121,6 +120,7 @@ public class BooksActivity extends AppCompatActivity implements
                     }
                 }
             }
+
             // Because AdapterView is an abstract class, onNothingSelected must be defined
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -132,14 +132,17 @@ public class BooksActivity extends AppCompatActivity implements
     /**
      * Get user input from editor and save book into database.
      */
-    private void savePet() {
-        //ToDo: update fields here to add new ones
+    private void saveBook() {
         // Read from input fields
         // Use trim to eliminate leading or trailing white space
         String titleString = mTitleEditText.getText().toString().trim();
         String authorString = mAuthorEditText.getText().toString().trim();
         String ibsnString = mIbsnEditText.getText().toString().trim();
-
+        String phoneString = mPhoneNumber.getText().toString().trim();
+        String priceString = mPrice.getText().toString().trim();
+        String quantityString = mQuantity.getText().toString().trim();
+        // turn the string to int for data base.
+        int quantityInt = Integer.parseInt(quantityString);
         // Check if this is supposed to be a new book
         // and check if all the fields in the editor are blank
         if (mCurrentBookUri == null &&
@@ -149,14 +152,16 @@ public class BooksActivity extends AppCompatActivity implements
             // No need to create ContentValues and no need to do any ContentProvider operations.
             return;
         }
-
         // Create a ContentValues object where column names are the keys,
         // and pet attributes from the editor are the values.
         ContentValues values = new ContentValues();
         values.put(BookEntry.COLUMNS_BOOK_TITLE, titleString);
         values.put(BookEntry.COLUMNS_BOOK_AUTHOR, authorString);
-        values.put(BookEntry.COLUMNS_BOOK_IBSN, mCanSell);
-        //ToDo: add fields here
+        values.put(BookEntry.COLUMNS_BOOK_IBSN, ibsnString);
+        values.put(BookEntry.COLUMNS_BOOK_QUANTITY, quantityInt);
+        values.put(BookEntry.COLUMNS_BOOK_CAN_SELL, mCanSell);
+        values.put(BookEntry.COLUMNS_BOOK_PHONE, phoneString);
+        values.put(BookEntry.COLUMNS_BOOK_PRICE, priceString);
         // If the weight is not provided by the user, don't try to parse the string into an
         // integer value. Use 0 by default.
         int phone = 0;
@@ -164,7 +169,6 @@ public class BooksActivity extends AppCompatActivity implements
             phone = Integer.parseInt(ibsnString);
         }
         values.put(BookEntry.COLUMNS_BOOK_PHONE, phone);
-
         // Determine if this is a new or existing book by checking if mCurrentbookUri is null or not
         if (mCurrentBookUri == null) {
             // This is a NEW book, so insert a new book into the provider,
@@ -229,7 +233,7 @@ public class BooksActivity extends AppCompatActivity implements
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
                 // Save book to database
-                savePet();
+                saveBook();
                 // Exit activity
                 finish();
                 return true;
@@ -297,8 +301,11 @@ public class BooksActivity extends AppCompatActivity implements
                 BookEntry.COLUMNS_BOOK_TITLE,
                 BookEntry.COLUMNS_BOOK_AUTHOR,
                 BookEntry.COLUMNS_BOOK_IBSN,
-                BookEntry.COLUMNS_BOOK_PHONE };
-                //ToDo add fields here
+                BookEntry.COLUMNS_BOOK_QUANTITY,
+                BookEntry.COLUMNS_BOOK_CAN_SELL,
+                BookEntry.COLUMNS_BOOK_PHONE,
+                BookEntry.COLUMNS_BOOK_PRICE};
+
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context
                 mCurrentBookUri,         // Query the content URI for the current book
@@ -321,21 +328,26 @@ public class BooksActivity extends AppCompatActivity implements
             int titleColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_TITLE);
             int authorColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_AUTHOR);
             int ibsnColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_IBSN);
+            int quantityColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_QUANTITY);
+            int canSellColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_CAN_SELL);
             int phoneColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_PHONE);
-
+            int priceColumnIndex = cursor.getColumnIndex(BookEntry.COLUMNS_BOOK_PRICE);
             // Extract out the value from the Cursor for the given column index
             String title = cursor.getString(titleColumnIndex);
             String author = cursor.getString(authorColumnIndex);
-            int canSell = cursor.getInt(ibsnColumnIndex);
-            int phone = cursor.getInt(phoneColumnIndex);
-
+            String ibsn = cursor.getString(ibsnColumnIndex);
+            int quantity = cursor.getInt(quantityColumnIndex);
+            int canSell = cursor.getInt(canSellColumnIndex);
+            String phone = cursor.getString(phoneColumnIndex);
+            String price = cursor.getString(priceColumnIndex);
             // Update the views on the screen with the values from the database
-            //ToDo: update and fix names and add the other views.
             mTitleEditText.setText(title);
             mAuthorEditText.setText(author);
-            mIbsnEditText.setText(Integer.toString(phone));
-
-            // Gender is a dropdown spinner, so map the constant value from the database
+            mIbsnEditText.setText(ibsn);
+            mQuantity.setText(Integer.toString(quantity));
+            mPhoneNumber.setText(phone);
+            mPrice.setText(price);
+            // Can sell is a dropdown spinner, so map the constant value from the database
             // into one of the dropdown options (0 is Unknown, 1 is yes, 2 is no).
             // Then call setSelection() so that option is displayed on screen as the current selection.
             switch (canSell) {
@@ -351,6 +363,7 @@ public class BooksActivity extends AppCompatActivity implements
             }
         }
     }
+
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         // If the loader is invalidated, clear out all the data from the input fields.
@@ -362,6 +375,7 @@ public class BooksActivity extends AppCompatActivity implements
         mQuantity.setText("");
         mCanSellSpinner.setSelection(0); // Select "Unknown" option
     }
+
     /**
      * Show a dialog that warns the user there are unsaved changes that will be lost
      * if they continue leaving the editor.
@@ -414,6 +428,7 @@ public class BooksActivity extends AppCompatActivity implements
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+
     /**
      * delete Book in the database.
      */

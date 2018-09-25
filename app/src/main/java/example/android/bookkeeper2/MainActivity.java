@@ -97,13 +97,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     public void insertBookData() {
         ContentValues values = new ContentValues();
-        values.put(BookEntry.COLUMNS_BOOK_TITLE, "xxx");
-        values.put(BookEntry.COLUMNS_BOOK_AUTHOR, "XXX");
+        values.put(BookEntry.COLUMNS_BOOK_TITLE, "a book");
+        values.put(BookEntry.COLUMNS_BOOK_AUTHOR, "no author");
         values.put(BookEntry.COLUMNS_BOOK_IBSN, "1234");
+        values.put(BookEntry.COLUMNS_BOOK_QUANTITY, 5);
+        values.put(BookEntry.COLUMNS_BOOK_CAN_SELL, 0);
         values.put(BookEntry.COLUMNS_BOOK_PHONE, "6026660000");
         values.put(BookEntry.COLUMNS_BOOK_PRICE, "12");
-        //ToDo: add quantity for data here
-
         Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
         if (newUri == null) {
             Toast.makeText(this, getString(R.string.added_no), Toast.LENGTH_SHORT).show();

@@ -3,6 +3,7 @@ package example.android.bookkeeper2.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import example.android.bookkeeper2.data.BooksContract.BookEntry;
 
 /**
@@ -33,9 +34,10 @@ public class BooksDBHelper extends SQLiteOpenHelper {
                 + BookEntry.COLUMNS_BOOK_TITLE + " TEXT, "
                 + BookEntry.COLUMNS_BOOK_AUTHOR + " TEXT, "
                 + BookEntry.COLUMNS_BOOK_IBSN + " TEXT, "
+                + BookEntry.COLUMNS_BOOK_QUANTITY + " INTEGER, "
+                + BookEntry.COLUMNS_BOOK_CAN_SELL + "  INTEGER, "
                 + BookEntry.COLUMNS_BOOK_PHONE + " TEXT, "
                 + BookEntry.COLUMNS_BOOK_PRICE + " TEXT); ";
-        //ToDo: add quantity for data here
         // make the table
         sqLiteDB.execSQL(SQL_CREATE_BOOKS_TABLE);
     }

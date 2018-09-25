@@ -88,7 +88,6 @@ public class BookProvider extends ContentProvider {
     private Uri insertBook(Uri uri, ContentValues values) throws IllegalArgumentException {
         //check incoming data
         DataChecks dataChecks = new DataChecks();
-
         String title = values.getAsString(BookEntry.COLUMNS_BOOK_TITLE);
         String ibsn = values.getAsString(BookEntry.COLUMNS_BOOK_IBSN);
         String phone = values.getAsString(BookEntry.COLUMNS_BOOK_PHONE);
@@ -196,27 +195,6 @@ public class BookProvider extends ContentProvider {
                 throw new IllegalArgumentException("Book requires a title");
             }
         }
-
-        /**
-        // If the {@link PetEntry#COLUMN_PET_GENDER} key is present,
-        // check that the gender value is valid.
-        if (values.containsKey(BookEntry.COLUMN_BOOK_CAN_SELL)) {
-            Integer gender = values.getAsInteger(BookEntry.COLUMN_PET_GENDER);
-            if (gender == null || !BookEntry.isValidGender(gender)) {
-                throw new IllegalArgumentException("Book requires valid sell option");
-            }
-        }
-
-        // If the {@link PetEntry#COLUMN_PET_WEIGHT} key is present,
-        // check that the weight value is valid.
-        if (values.containsKey(BookEntry.COLUMNS_BOOK_IBSN)) {
-            // Check that the weight is greater than or equal to 0 kg
-            Integer weight = values.getAsInteger(BookEntry.COLUMNS_BOOK_IBSN);
-            if (weight != null && weight < 0) {
-                throw new IllegalArgumentException("Pet requires valid weight");
-            }
-        }
-         */
         // If there are no values to update, then don't try to update the database
         if (values.size() == 0) {
             return 0;
