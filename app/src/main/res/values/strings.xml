@@ -65,13 +65,9 @@
     <!-- Toast message in editor when current book has failed to be deleted -->
     <string name="editor_delete_book_failed">Error with deleting book</string>
 
-    <!-- extra -->
-
     <!-- Label for dropdown menu option for if the book can be sold or not -->
     <string name="can_sell_unknown">Unknown</string>
     <string name="can_sell_yes">Yes</string>
     <string name="can_sell_no">No</string>
 
-    <!-- may not need this -->
-    <string name="unknown_breed">Unknown breed</string>
 </resources>

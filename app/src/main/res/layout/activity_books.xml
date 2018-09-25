@@ -28,14 +28,14 @@
 
             <!-- Name field -->
             <EditText
-                android:id="@+id/edit_pet_name"
+                android:id="@+id/edit_title_name"
                 style="@style/EditorFieldStyle"
                 android:hint="@string/hint_book_title"
                 android:inputType="textCapWords" />
 
             <!-- Breed field -->
             <EditText
-                android:id="@+id/edit_pet_breed"
+                android:id="@+id/edit_author_name"
                 style="@style/EditorFieldStyle"
                 android:hint="@string/hint_author"
                 android:inputType="textCapWords" />
@@ -45,7 +45,7 @@
 
     <!-- IBSN category -->
     <LinearLayout
-        android:id="@+id/container_measurement"
+        android:id="@+id/container_ibsn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -64,7 +64,7 @@
 
             <!-- Weight field -->
             <EditText
-                android:id="@+id/edit_pet_weight"
+                android:id="@+id/edit_ibsn_number"
                 style="@style/EditorFieldStyle"
                 android:hint="@string/hint_ibsn_number"
                 android:inputType="number" />
