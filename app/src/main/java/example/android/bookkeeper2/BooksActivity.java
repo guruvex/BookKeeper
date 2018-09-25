@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -44,6 +45,9 @@ public class BooksActivity extends AppCompatActivity implements
     private Spinner mCanSellSpinner;
     private int mCanSell = BookEntry.CAN_SELL_UNKNOWN;
     private boolean mBookHasChanged = false;
+    private Button moreButton;
+    private Button lessButton;
+    private Button phoneButton;
     /**
      * OnTouchListener that listens for any user touches on a View, implying that they are modifying
      * the view, and we change the mBookHasChanged boolean to true.
@@ -90,7 +94,48 @@ public class BooksActivity extends AppCompatActivity implements
         mIbsnEditText.setOnTouchListener(mTouchListener);
         mCanSellSpinner.setOnTouchListener(mTouchListener);
         // set the spinner to current state
+        //find buttons
+        moreButton = findViewById(R.id.more_button);
+        lessButton = findViewById(R.id.less_button);
+        phoneButton = findViewById(R.id.call_me);
         setupSpinner();
+
+        moreButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                // pull the current value
+                Integer changeQuantity =  Integer.parseInt( mQuantity.getText().toString());
+                changeQuantity += 1;
+                //check for to low of value
+                if (changeQuantity > 100) {
+                    changeQuantity = 100;
+                }
+                // update field
+                mQuantity.setText(Integer.toString(changeQuantity));
+            }
+        });
+        lessButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                // pull the current value
+                Integer changeQuantity =  Integer.parseInt( mQuantity.getText().toString());
+                changeQuantity -= 1;
+                //check for to low of value
+                if (changeQuantity < 0) {
+                    changeQuantity = 0;
+                }
+                // update field
+                mQuantity.setText(Integer.toString(changeQuantity));
+            }
+        });
+        phoneButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"+mPhoneNumber.getText().toString()));
+                startActivity(intent);
+            }
+        });
     }
 
     /**

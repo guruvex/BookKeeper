@@ -134,4 +134,5 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoaderReset(Loader<Cursor> loader) {
         mCursorAdaptor.swapCursor(null);
     }
+
 }
