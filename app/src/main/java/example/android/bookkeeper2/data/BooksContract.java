@@ -18,6 +18,9 @@ public final class BooksContract implements BaseColumns {
         // database tables
         public final static String TABLE_NAME = "books";
         public final static String _ID = BaseColumns._ID;
+        //ToDo:  Suggestion  The BaseColumns interface automatically includes a constant
+        // representing the primary key field called _ID, so you don't need to include it in the Contract Class.
+
         public final static String COLUMNS_BOOK_TITLE = "title";
         public final static String COLUMNS_BOOK_AUTHOR = "author";
         public final static String COLUMNS_BOOK_IBSN = "ibsn";

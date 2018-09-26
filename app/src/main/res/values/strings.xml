@@ -71,4 +71,6 @@
     <string name="can_sell_no">No</string>
 
     <string name="call_phone">Call Phone Number</string>
+
+    <string name="sale_button">Sale</string>
 </resources>

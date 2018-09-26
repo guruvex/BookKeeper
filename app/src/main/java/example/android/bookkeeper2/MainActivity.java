@@ -121,7 +121,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         String [] projection = {
                 BookEntry._ID,
                 BookEntry.COLUMNS_BOOK_TITLE,
-                BookEntry.COLUMNS_BOOK_AUTHOR };
+                BookEntry.COLUMNS_BOOK_AUTHOR,
+                BookEntry.COLUMNS_BOOK_PRICE,
+                BookEntry.COLUMNS_BOOK_QUANTITY};
         return new CursorLoader(this, BookEntry.CONTENT_URI,projection,null,null,null);
     }
 

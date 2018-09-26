@@ -45,5 +45,7 @@ public class BooksDBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         // no on upgrade code yet
+        // good and bad ways to use this
+        //ToDo: https://thebhwgroup.com/blog/how-android-sqlite-onupgrade
     }
 }

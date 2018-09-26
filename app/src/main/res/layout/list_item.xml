@@ -2,19 +2,81 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="horizontal"
+    android:id="@+id/view_container">
+
+    <LinearLayout
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:hint="title"
+                android:paddingStart="20dp"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/text_price"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="price"
+                android:paddingStart="20dp"
+                android:textColor="#757575"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/author"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:hint="author"
+                android:paddingStart="20dp"
+                android:textColor="#757575"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/text_quanitiy"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="quantity"
+                android:paddingStart="20dp"
+                android:textColor="#757575"
+                android:textStyle="italic" />
+
+        </LinearLayout>
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/author"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#757575"
-        android:textStyle="italic" />
+        android:id="@+id/sold_button"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:background="#009900"
+        android:gravity="center"
+        android:text="@string/sale_button" />
+    <!-- ToDo: -->
+    <!-- add some padding to these views, now they are too close to the border as commented in the project review tab. -->
+    <!-- Please, add a couple more of TextViews to display the item price and quantity to meet specifications. -->
+    <!-- This Layout must also contain a Sale button to decrease the quantity by one every time the button is clicked. -->
+    <!-- logic for the button will be in the adaptor? -->
 </LinearLayout>

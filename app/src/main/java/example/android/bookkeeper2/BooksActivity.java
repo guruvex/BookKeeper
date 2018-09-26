@@ -103,6 +103,11 @@ public class BooksActivity extends AppCompatActivity implements
         moreButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                //ToDo: If the user tries to set the quantity with the increase button when
+                // inserting a new item, the app crashes as commented in the project review tab.
+                // This is because the app tries to parse a null value here. Please, be sure that
+                // the user has inserted some value here before trying to parse it.
+
                 // pull the current value
                 Integer changeQuantity =  Integer.parseInt( mQuantity.getText().toString());
                 changeQuantity += 1;
@@ -188,8 +193,13 @@ public class BooksActivity extends AppCompatActivity implements
         String quantityString = mQuantity.getText().toString().trim();
         // turn the string to int for data base.
         int quantityInt = Integer.parseInt(quantityString);
+        //ToDo: ^^^ Before trying to parse this value, the app must validate that the user has entered
+        // any, if not, the app crashes as commented in the project review tab.
+
         // Check if this is supposed to be a new book
         // and check if all the fields in the editor are blank
+        //ToDo: This validation needs some changes to make it work properly:
+        // see text doc of the same name ^ for more info.
         if (mCurrentBookUri == null &&
                 TextUtils.isEmpty(titleString) && TextUtils.isEmpty(authorString) &&
                 TextUtils.isEmpty(ibsnString) && mCanSell == BookEntry.CAN_SELL_UNKNOWN) {
@@ -210,8 +220,8 @@ public class BooksActivity extends AppCompatActivity implements
         // If the weight is not provided by the user, don't try to parse the string into an
         // integer value. Use 0 by default.
         int phone = 0;
-        if (!TextUtils.isEmpty(ibsnString)) {
-            phone = Integer.parseInt(ibsnString);
+        if (!TextUtils.isEmpty(phoneString)) {
+            phone = Integer.parseInt(phoneString);
         }
         values.put(BookEntry.COLUMNS_BOOK_PHONE, phone);
         // Determine if this is a new or existing book by checking if mCurrentbookUri is null or not
