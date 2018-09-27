@@ -73,10 +73,13 @@
         android:layout_margin="10dp"
         android:background="#009900"
         android:gravity="center"
-        android:text="@string/sale_button" />
-    <!-- ToDo: -->
-    <!-- add some padding to these views, now they are too close to the border as commented in the project review tab. -->
-    <!-- Please, add a couple more of TextViews to display the item price and quantity to meet specifications. -->
-    <!-- This Layout must also contain a Sale button to decrease the quantity by one every time the button is clicked. -->
-    <!-- logic for the button will be in the adaptor? -->
+        android:text="@string/sale_button"
+        />
+
+    <TextView
+        android:id="@+id/my_secret"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="invisible"/>
+
 </LinearLayout>

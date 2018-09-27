@@ -154,7 +154,8 @@
                 style="@style/QuantityFieldStyle"
                 android:layout_toEndOf="@id/more_button"
                 android:hint="@string/hint_quantity"
-                android:inputType="number" />
+                android:inputType="number"
+                android:text="0"/>
 
             <Button
                 android:id="@+id/less_button"
@@ -165,9 +166,9 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <!-- Gender category -->
+    <!-- Available category -->
     <LinearLayout
-        android:id="@+id/container_gender"
+        android:id="@+id/container_available"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">

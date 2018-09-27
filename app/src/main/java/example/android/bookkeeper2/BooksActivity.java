@@ -22,9 +22,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.app.LoaderManager;
-
 import example.android.bookkeeper2.data.BooksContract.BookEntry;
-
 import android.content.CursorLoader;
 
 public class BooksActivity extends AppCompatActivity implements
@@ -99,21 +97,22 @@ public class BooksActivity extends AppCompatActivity implements
         lessButton = findViewById(R.id.less_button);
         phoneButton = findViewById(R.id.call_me);
         setupSpinner();
-
+        // set up buttons
         moreButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                //ToDo: If the user tries to set the quantity with the increase button when
-                // inserting a new item, the app crashes as commented in the project review tab.
-                // This is because the app tries to parse a null value here. Please, be sure that
-                // the user has inserted some value here before trying to parse it.
-
+                Integer changeQuantity;
                 // pull the current value
-                Integer changeQuantity =  Integer.parseInt( mQuantity.getText().toString());
-                changeQuantity += 1;
-                //check for to low of value
-                if (changeQuantity > 100) {
-                    changeQuantity = 100;
+                try {
+                    changeQuantity = Integer.parseInt(mQuantity.getText().toString());
+                    changeQuantity += 1;
+                    //check for to low of value
+                    if (changeQuantity > 100) {
+                        changeQuantity = 100;
+                    }
+                } catch (Exception e) {
+                    // if the value in the field is invalid set it to 1
+                    changeQuantity = 1;
                 }
                 // update field
                 mQuantity.setText(Integer.toString(changeQuantity));
@@ -122,11 +121,17 @@ public class BooksActivity extends AppCompatActivity implements
         lessButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                Integer changeQuantity;
                 // pull the current value
-                Integer changeQuantity =  Integer.parseInt( mQuantity.getText().toString());
-                changeQuantity -= 1;
-                //check for to low of value
-                if (changeQuantity < 0) {
+                try {
+                    changeQuantity = Integer.parseInt(mQuantity.getText().toString());
+                    changeQuantity -= 1;
+                    //check for to low of value
+                    if (changeQuantity < 0) {
+                        changeQuantity = 0;
+                    }
+                } catch (Exception e) {
+                    // if the value in the field is invalid set it to 0
                     changeQuantity = 0;
                 }
                 // update field
@@ -170,7 +175,6 @@ public class BooksActivity extends AppCompatActivity implements
                     }
                 }
             }
-
             // Because AdapterView is an abstract class, onNothingSelected must be defined
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -192,17 +196,15 @@ public class BooksActivity extends AppCompatActivity implements
         String priceString = mPrice.getText().toString().trim();
         String quantityString = mQuantity.getText().toString().trim();
         // turn the string to int for data base.
-        int quantityInt = Integer.parseInt(quantityString);
-        //ToDo: ^^^ Before trying to parse this value, the app must validate that the user has entered
-        // any, if not, the app crashes as commented in the project review tab.
-
+        int quantityInt;
+        try {
+            quantityInt = Integer.parseInt(quantityString);
+        } catch (Exception e){
+            quantityInt = 0;
+        }
         // Check if this is supposed to be a new book
-        // and check if all the fields in the editor are blank
-        //ToDo: This validation needs some changes to make it work properly:
-        // see text doc of the same name ^ for more info.
-        if (mCurrentBookUri == null &&
-                TextUtils.isEmpty(titleString) && TextUtils.isEmpty(authorString) &&
-                TextUtils.isEmpty(ibsnString) && mCanSell == BookEntry.CAN_SELL_UNKNOWN) {
+        // and check if any fields in the editor are blank
+        if (!checkData(titleString, authorString, ibsnString,phoneString,priceString,quantityString)) {
             // Since no fields were modified, we can return early without creating a new book.
             // No need to create ContentValues and no need to do any ContentProvider operations.
             return;
@@ -219,11 +221,6 @@ public class BooksActivity extends AppCompatActivity implements
         values.put(BookEntry.COLUMNS_BOOK_PRICE, priceString);
         // If the weight is not provided by the user, don't try to parse the string into an
         // integer value. Use 0 by default.
-        int phone = 0;
-        if (!TextUtils.isEmpty(phoneString)) {
-            phone = Integer.parseInt(phoneString);
-        }
-        values.put(BookEntry.COLUMNS_BOOK_PHONE, phone);
         // Determine if this is a new or existing book by checking if mCurrentbookUri is null or not
         if (mCurrentBookUri == null) {
             // This is a NEW book, so insert a new book into the provider,
@@ -288,10 +285,20 @@ public class BooksActivity extends AppCompatActivity implements
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
                 // Save book to database
-                saveBook();
-                // Exit activity
-                finish();
-                return true;
+                if (checkData(mTitleEditText.toString().trim(),
+                         mAuthorEditText.toString().trim(),
+                         mIbsnEditText.toString().trim(),
+                         mPhoneNumber.toString().trim(),
+                         mPrice.toString().trim(),
+                         mQuantity.toString().trim())) {
+                    // Since no fields were modified, we can return early without creating a new book.
+                    // No need to create ContentValues and no need to do any ContentProvider operations.
+                    saveBook();
+                    // Exit activity
+                    finish();
+                    return true;
+                }
+
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
                 // Pop up confirmation dialog for deletion
@@ -507,5 +514,32 @@ public class BooksActivity extends AppCompatActivity implements
         }
         // Close the activity
         finish();
+    }
+    private boolean checkData(String titleString, String authorString, String ibsnString, String phnoneNumber, String price, String quantity) {
+        if (TextUtils.isEmpty(titleString)){
+            Toast.makeText(this, getResources().getString(R.string.empty_title), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (TextUtils.isEmpty(authorString)){
+            Toast.makeText(this, getResources().getString(R.string.empty_author), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (TextUtils.isEmpty(ibsnString)){
+            Toast.makeText(this, getResources().getString(R.string.empty_ibsn), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (TextUtils.isEmpty(phnoneNumber)) {
+            Toast.makeText(this, getResources().getString(R.string.empty_phone), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (TextUtils.isEmpty(price)) {
+            Toast.makeText(this, getResources().getString(R.string.empty_price), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (TextUtils.isEmpty(quantity)) {
+            Toast.makeText(this, getResources().getString(R.string.empty_quantity), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 }

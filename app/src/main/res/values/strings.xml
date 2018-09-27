@@ -73,4 +73,10 @@
     <string name="call_phone">Call Phone Number</string>
 
     <string name="sale_button">Sale</string>
+    <string name="empty_title">title is empty</string>
+    <string name="empty_author">author is empty</string>
+    <string name="empty_ibsn">ibsn is empty</string>
+    <string name="empty_phone">phone number is empty</string>
+    <string name="empty_price">price is empty</string>
+    <string name="empty_quantity">Quantity is empty</string>
 </resources>
